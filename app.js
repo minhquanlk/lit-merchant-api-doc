@@ -1291,6 +1291,18 @@ const pages = [
                         text: "API trả dữ liệu `qr_code`; ứng dụng tích hợp cần tạo ảnh QR từ dữ liệu này và đặt vào vùng trắng của frame LIT Merchant. Người mua hoàn tất thanh toán bằng cách quét QR trên màn hình.",
                     },
                     {
+                        type: "notice",
+                        style: "notice",
+                        title: "Thời gian hiệu lực QR",
+                        text: "QR thanh toán tạo từ API precreate có hiệu lực trong [[blue:4 phút]], tương đương [[blue:240 giây]]. Sau thời gian này, QR không còn giá trị thanh toán và hệ thống sẽ tự động huỷ đơn nếu giao dịch chưa được thanh toán. Nếu màn hình vẫn hiển thị QR cũ, khách hàng có thể quét hình ảnh QR nhưng giao dịch sẽ không được chấp nhận. API precreate không hỗ trợ tham số để thay đổi thời gian hiệu lực của QR; khi QR hết hạn, đối tác cần ngừng hiển thị QR cũ và tạo đơn thanh toán mới với `client_sn` mới.",
+                    },
+                    {
+                        type: "notice",
+                        style: "notice",
+                        title: "Không tái sử dụng client_sn",
+                        text: "`client_sn` là mã đơn duy nhất để đối soát. Khi tạo lại QR do hết hạn, huỷ hoặc người mua đổi phương thức thanh toán, đối tác cần dùng `client_sn` mới. Không dùng lại `client_sn` của QR cũ cho một lần thanh toán mới để tránh xung đột và sai lệch đối soát.",
+                    },
+                    {
                         type: "flow",
                         title: "Sau khi precreate thành công",
                         items: [
@@ -1377,6 +1389,18 @@ const pages = [
                         text: "The API returns `qr_code`; the integrated application generates a QR image from this value and places it in the white area of the LIT Merchant frame. The buyer completes payment by scanning the QR on screen.",
                     },
                     {
+                        type: "notice",
+                        style: "notice",
+                        title: "QR validity",
+                        text: "The payment QR created by the precreate API is valid for [[blue:4 minutes]], equal to [[blue:240 seconds]]. After this period, the QR is no longer valid for payment and the system automatically cancels the order if the transaction has not been paid. If the screen still displays the old QR image, the customer may scan it, but the transaction will not be accepted. The precreate API does not support a parameter for changing QR validity; when the QR expires, the partner must stop displaying the old QR and create a new payment order with a new `client_sn`.",
+                    },
+                    {
+                        type: "notice",
+                        style: "notice",
+                        title: "Do not reuse client_sn",
+                        text: "`client_sn` is the unique partner order number used for reconciliation. When recreating a QR because of expiry, cancellation, or a buyer payment-method change, use a new `client_sn`. Do not reuse the old QR's `client_sn` for a new payment attempt, to avoid conflicts and reconciliation mismatch.",
+                    },
+                    {
                         type: "flow",
                         title: "After successful pre-create",
                         items: [
@@ -1456,6 +1480,18 @@ const pages = [
                         style: "success",
                         title: "二维码展示",
                         text: "接口返回 `qr_code`；接入应用需要基于该值生成二维码图片，并放入 LIT Merchant 框架白色区域。买家通过扫描屏幕二维码完成支付。",
+                    },
+                    {
+                        type: "notice",
+                        style: "notice",
+                        title: "二维码有效期",
+                        text: "通过 precreate API 创建的支付二维码有效期为 [[blue:4 分钟]]，即 [[blue:240 秒]]。超过有效期后，该二维码不再具备支付效力；如交易尚未支付，系统会自动撤销订单。如果收银页面仍展示旧二维码，客户可能仍能扫描该图片，但交易不会被受理。precreate API 不支持通过请求参数修改二维码有效期；二维码过期后，合作方应停止展示旧二维码，并使用新的 `client_sn` 创建新的支付订单。",
+                    },
+                    {
+                        type: "notice",
+                        style: "notice",
+                        title: "不要复用 client_sn",
+                        text: "`client_sn` 是用于对账的合作方唯一订单号。因二维码过期、订单取消或买家更换支付方式而重新生成二维码时，应使用新的 `client_sn`。不要将旧二维码的 `client_sn` 用于新的支付尝试，以避免单号冲突和对账差异。",
                     },
                     {
                         type: "flow",
@@ -1552,6 +1588,12 @@ const pages = [
                         title: "Lưu ý vận hành",
                         text: "`dynamic_id` có thời hạn ngắn và có thể hết hạn. Nếu thanh toán thất bại hoặc timeout, hãy yêu cầu khách hàng mở lại mã thanh toán và tạo giao dịch mới với `client_sn` mới.",
                     },
+                    {
+                        type: "notice",
+                        style: "danger",
+                        title: "Kết quả chưa chắc chắn",
+                        text: "Nếu Pay trả `PAY_IN_PROGRESS`, `PAY_FAIL_ERROR`, `PAY_ERROR`, `IN_PROG`, `ERROR_RECOVERY` hoặc nhóm lỗi protocol/IO, đối tác không tự kết luận giao dịch đã thành công hoặc thất bại. Giữ đơn ở trạng thái chờ đối soát, gọi Query bằng `sn` hoặc `client_sn`, và liên hệ LIT nếu trạng thái không chuyển về trạng thái cuối.",
+                    },
                 ],
             },
             en: {
@@ -1632,6 +1674,12 @@ const pages = [
                         title: "Operational note",
                         text: "`dynamic_id` is short-lived and can expire. If payment fails or times out, ask the customer to reopen the payment code and create a new transaction with a new `client_sn`.",
                     },
+                    {
+                        type: "notice",
+                        style: "danger",
+                        title: "Uncertain result",
+                        text: "If Pay returns `PAY_IN_PROGRESS`, `PAY_FAIL_ERROR`, `PAY_ERROR`, `IN_PROG`, `ERROR_RECOVERY`, or protocol/IO error statuses, the partner must not decide that the transaction has succeeded or failed. Keep the order pending reconciliation, call Query by `sn` or `client_sn`, and contact LIT if the status does not move to a final state.",
+                    },
                 ],
             },
             zh: {
@@ -1707,6 +1755,12 @@ const pages = [
                         title: "运营提示",
                         text: "`dynamic_id` 有较短有效期，可能过期。如支付失败或超时，请让客户重新打开付款码，并使用新的 `client_sn` 创建新交易。",
                     },
+                    {
+                        type: "notice",
+                        style: "danger",
+                        title: "结果不确定",
+                        text: "如果 Pay 返回 `PAY_IN_PROGRESS`、`PAY_FAIL_ERROR`、`PAY_ERROR`、`IN_PROG`、`ERROR_RECOVERY` 或 protocol/IO 类错误，合作方不得自行判定交易成功或失败。应将订单保持为待对账状态，通过 `sn` 或 `client_sn` 调用查询接口；如状态未转为最终状态，请联系 LIT。",
+                    },
                 ],
             },
         },
@@ -1762,6 +1816,30 @@ const pages = [
                             "Sau 30 giây, chuyển sang mỗi 5 giây cho tới khi nhận trạng thái cuối.",
                             "Khi nhận trạng thái cuối như thanh toán thành công, huỷ, hết hạn hoặc lỗi business cụ thể, hệ thống dừng polling và cập nhật đơn hàng.",
                         ],
+                    },
+                    {
+                        type: "list",
+                        title: "Quy tắc đóng đơn",
+                        items: [
+                            [
+                                "Thanh toán thành công",
+                                "Chỉ ghi nhận thành công khi Query trả `order_status=PAID` hoặc `status=SUCCESS`, đồng thời `sn`, `client_sn` và `total_amount` khớp với đơn hàng.",
+                            ],
+                            [
+                                "Không thanh toán",
+                                "Chỉ đóng đơn ở trạng thái không thanh toán khi Query trả trạng thái cuối như `PAY_CANCELED`, `CANCELED`, `ABORTED` hoặc lỗi hết hạn `TRADE_TIMEOUT`.",
+                            ],
+                            [
+                                "Chờ đối soát",
+                                "Không phát hàng và không đóng đơn khi response còn `CREATED`, `IN_PROG`, `ERROR_RECOVERY`, `PAY_ERROR`, `PAY_FAIL_ERROR` hoặc nhóm lỗi protocol/IO.",
+                            ],
+                        ],
+                    },
+                    {
+                        type: "notice",
+                        style: "danger",
+                        title: "Trường hợp khách hàng thấy đã thanh toán nhưng POS chưa xác nhận",
+                        text: "Nếu khách hàng báo đã thanh toán nhưng POS/ERP nhận trạng thái thất bại hoặc chưa rõ, không xác nhận thủ công khi chưa có kết quả Query cuối cùng. Nhân viên cần dùng chức năng Query để kiểm tra lại giao dịch; nếu Query vẫn không trả trạng thái cuối, giữ đơn ở trạng thái chờ đối soát và liên hệ LIT để xử lý.",
                     },
                     {
                         type: "notice",
@@ -1820,6 +1898,30 @@ const pages = [
                         ],
                     },
                     {
+                        type: "list",
+                        title: "Order-closing rules",
+                        items: [
+                            [
+                                "Payment accepted",
+                                "Mark the order paid only when Query returns `order_status=PAID` or `status=SUCCESS`, and `sn`, `client_sn`, and `total_amount` match the order.",
+                            ],
+                            [
+                                "No payment",
+                                "Close the order as unpaid only when Query returns a final state such as `PAY_CANCELED`, `CANCELED`, `ABORTED`, or the expiry error `TRADE_TIMEOUT`.",
+                            ],
+                            [
+                                "Pending reconciliation",
+                                "Do not release goods or close the order while the response remains `CREATED`, `IN_PROG`, `ERROR_RECOVERY`, `PAY_ERROR`, `PAY_FAIL_ERROR`, or protocol/IO error statuses.",
+                            ],
+                        ],
+                    },
+                    {
+                        type: "notice",
+                        style: "danger",
+                        title: "Customer sees paid but POS is not confirmed",
+                        text: "If the customer reports a successful payment while POS/ERP receives a failed or unclear status, do not manually confirm the order without a final Query result. The cashier should run Query again; if Query still does not return a final state, keep the order pending reconciliation and contact LIT.",
+                    },
+                    {
                         type: "notice",
                         style: "notice",
                         title: "Callback does not replace query",
@@ -1876,6 +1978,30 @@ const pages = [
                         ],
                     },
                     {
+                        type: "list",
+                        title: "订单关闭规则",
+                        items: [
+                            [
+                                "支付成功",
+                                "仅当查询返回 `order_status=PAID` 或 `status=SUCCESS`，且 `sn`、`client_sn`、`total_amount` 与订单一致时，才可确认支付成功。",
+                            ],
+                            [
+                                "未支付",
+                                "仅当查询返回 `PAY_CANCELED`、`CANCELED`、`ABORTED` 或超时错误 `TRADE_TIMEOUT` 等最终状态时，才可关闭为未支付。",
+                            ],
+                            [
+                                "待对账",
+                                "当 response 仍为 `CREATED`、`IN_PROG`、`ERROR_RECOVERY`、`PAY_ERROR`、`PAY_FAIL_ERROR` 或 protocol/IO 类错误时，不应发货，也不应关闭订单。",
+                            ],
+                        ],
+                    },
+                    {
+                        type: "notice",
+                        style: "danger",
+                        title: "客户显示已支付但 POS 未确认",
+                        text: "如客户表示已支付成功，但 POS/ERP 收到失败或不明确状态，不应凭人工判断处理。收银员应再次使用查询接口核验；如查询仍未返回最终状态，应保持订单为待对账状态，并联系 LIT 处理。",
+                    },
+                    {
                         type: "notice",
                         style: "notice",
                         title: "回调不能替代查询",
@@ -1900,6 +2026,30 @@ const pages = [
                         style: "danger",
                         title: "Chưa khả dụng qua API",
                         text: "`/upay/v2/refund`, `/upay/v2/cancel`, `/upay/v2/revoke` chưa được mở cho tích hợp khách hàng. Vui lòng không kích hoạt các thao tác này trên POS/ERP cho đến khi LIT Merchant có thông báo hỗ trợ chính thức.",
+                    },
+                    {
+                        type: "notice",
+                        style: "notice",
+                        title: "Không tự suy luận quyền hoàn/huỷ từ response",
+                        text: "Các mốc thời gian và điều kiện hoàn tiền, huỷ trong ngày hoặc điều chỉnh giao dịch được xác nhận theo quy trình vận hành của LIT. Khi nhóm API này chưa được mở, đối tác không tự xử lý hoàn/huỷ dựa trên trạng thái đơn hàng hoặc response API.",
+                    },
+                    {
+                        type: "list",
+                        title: "Mốc vận hành cần lưu ý",
+                        items: [
+                            [
+                                "Hoàn tiền",
+                                "Yêu cầu hoàn tiền được tiếp nhận trong vòng 3 tháng kể từ khi đơn thanh toán thành công, theo quy trình vận hành của LIT.",
+                            ],
+                            [
+                                "撤单 / revoke",
+                                "Chỉ áp dụng trong ngày thanh toán và do LIT xử lý qua kênh vận hành.",
+                            ],
+                            [
+                                "冲正 / cancel",
+                                "Dùng cho trường hợp trạng thái giao dịch chưa rõ hoặc có rủi ro sai lệch đối soát; đối tác cần chuyển yêu cầu cho LIT thay vì tự gọi API.",
+                            ],
+                        ],
                     },
                     {
                         type: "table",
@@ -1959,6 +2109,30 @@ const pages = [
                         text: "`/upay/v2/refund`, `/upay/v2/cancel`, and `/upay/v2/revoke` are not enabled for customer integrations yet. Do not enable these actions in POS/ERP until LIT Merchant officially confirms support.",
                     },
                     {
+                        type: "notice",
+                        style: "notice",
+                        title: "Do not infer refund/cancel eligibility from responses",
+                        text: "Refund timing, same-day cancellation, and transaction adjustment conditions are confirmed through LIT operations. While these APIs are not enabled, partners must not process refunds or cancellations based only on order status or API responses.",
+                    },
+                    {
+                        type: "list",
+                        title: "Operational windows",
+                        items: [
+                            [
+                                "Refund",
+                                "Refund requests can be accepted within 3 months after the payment order is completed successfully, through the LIT operations process.",
+                            ],
+                            [
+                                "撤单 / revoke",
+                                "Applies only on the payment day and is handled by LIT through the operations channel.",
+                            ],
+                            [
+                                "冲正 / cancel",
+                                "Used when transaction status is unclear or reconciliation risk exists; partners should route the request to LIT instead of calling the API directly.",
+                            ],
+                        ],
+                    },
+                    {
                         type: "table",
                         title: "Operation endpoints",
                         columns: columns.en,
@@ -2014,6 +2188,30 @@ const pages = [
                         style: "danger",
                         title: "当前不通过 API 开放",
                         text: "`/upay/v2/refund`、`/upay/v2/cancel`、`/upay/v2/revoke` 尚未向客户集成开放。在 LIT Merchant 正式通知支持前，请勿在 POS/ERP 中启用这些操作。",
+                    },
+                    {
+                        type: "notice",
+                        style: "notice",
+                        title: "不要根据 response 自行判断退款/撤销权限",
+                        text: "退款时限、当日撤单和交易调整条件均以 LIT 运营流程确认为准。在该组 API 尚未开放时，合作方不得仅根据订单状态或 API response 自行处理退款或撤销。",
+                    },
+                    {
+                        type: "list",
+                        title: "运营时限说明",
+                        items: [
+                            [
+                                "退款",
+                                "支付订单成功完成后 3 个月内可受理退款请求，具体按 LIT 运营流程处理。",
+                            ],
+                            [
+                                "撤单 / revoke",
+                                "仅适用于支付当日，并由 LIT 通过运营渠道处理。",
+                            ],
+                            [
+                                "冲正 / cancel",
+                                "用于交易状态不明确或存在对账风险的场景；合作方应将请求转交 LIT 处理，而不是直接调用 API。",
+                            ],
+                        ],
                     },
                     {
                         type: "table",
@@ -2337,6 +2535,12 @@ const sourceRepos = [
         },
     },
 ];
+
+const githubLogo = `
+  <svg class="github-logo" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82A7.58 7.58 0 0 1 8 3.46c.68 0 1.36.09 2 .27 1.53-1.03 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z" />
+  </svg>
+`;
 
 const sampleBody =
     '{"terminal_sn":"LITVN00000001","client_sn":"LIT202605150001","total_amount":"100000","payway":"2001","sub_payway":"2","subject":"LIT Merchant order","operator":"cashier01","extended":{"sqb_cent_flag":"1"}}';
@@ -3315,8 +3519,9 @@ function renderSection(section) {
               .map(
                   (source) => `
                 <a class="source-link" href="${source.url}" target="_blank" rel="noreferrer">
+                  <span class="source-icon">${githubLogo}</span>
                   <strong>${escapeHtml(source.name)}</strong>
-                  <span>${inline(source.note[state.lang])}</span>
+                  <span class="source-note">${inline(source.note[state.lang])}</span>
                 </a>
               `,
               )
