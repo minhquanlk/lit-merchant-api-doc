@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="vi">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>LIT Merchant API Documentation</title>
+        <link rel="icon" type="image/png" href="./assets/favicon.png" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;500;600;700;800&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="./styles.css" />
+    </head>
+    <body>
+        <div class="app-shell">
+            <aside class="sidebar" aria-label="Documentation navigation">
+                <a
+                    class="brand"
+                    href="#overview"
+                    aria-label="LIT Merchant API home"
+                >
+                    <span class="brand-mark" aria-hidden="true"> </span>
+                    <span>
+                        <strong>LIT Merchant</strong>
+                        <small>API Docs</small>
+                    </span>
+                </a>
+
+                <div class="env-panel">
+                    <span class="eyebrow" data-i18n="envLabel">Base URL</span>
+                    <code>https://api.litnow.vn</code>
+                </div>
+
+                <nav class="nav-list" id="navList"></nav>
+
+                <div class="sidebar-footer">
+                    <label for="languageSelect" data-i18n="languageLabel"
+                        >Language</label
+                    >
+                    <div class="select-wrap">
+                        <select
+                            id="languageSelect"
+                            aria-label="Document language"
+                        >
+                            <option value="vi">Tiếng Việt</option>
+                            <option value="en">English</option>
+                            <option value="zh">中文</option>
+                        </select>
+                    </div>
+                </div>
+            </aside>
+
+            <div class="content-shell">
+                <header class="topbar">
+                    <button
+                        class="menu-button"
+                        type="button"
+                        id="menuButton"
+                        aria-label="Toggle navigation"
+                    >
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <div class="topbar-title">
+                        <span class="eyebrow" data-i18n="marketLabel"
+                            >Vietnam market</span
+                        >
+                        <strong id="currentPageTitle">Overview</strong>
+                    </div>
+                </header>
+
+                <main id="docRoot" class="doc-root" tabindex="-1"></main>
+            </div>
+        </div>
+
+        <script src="./app.js"></script>
+    </body>
+</html>
