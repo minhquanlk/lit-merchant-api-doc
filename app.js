@@ -11,6 +11,9 @@ const copy = {
         qrCaption:
             "Hiển thị QR được tạo từ `biz_response.data.qr_code` trong vùng trắng của frame LIT Merchant.",
         downloadFrame: "Download frame",
+        previousPage: "Trang trước",
+        nextPage: "Trang sau",
+        pageNavigation: "Điều hướng trang",
         sourceNote:
             "Mỗi ví dụ giữ cùng nguyên tắc: body gửi đi phải giống hoàn toàn với body dùng để tạo chữ ký.",
     },
@@ -24,6 +27,9 @@ const copy = {
         qrCaption:
             "Display the QR generated from `biz_response.data.qr_code` inside the white area of the LIT Merchant frame.",
         downloadFrame: "Download frame",
+        previousPage: "Previous page",
+        nextPage: "Next page",
+        pageNavigation: "Page navigation",
         sourceNote:
             "Each example keeps the same rule: the request body sent to the API must match the body used for signature generation exactly.",
     },
@@ -37,6 +43,9 @@ const copy = {
         qrCaption:
             "将基于 `biz_response.data.qr_code` 生成的二维码展示在 LIT Merchant 框架的白色区域。",
         downloadFrame: "下载框架",
+        previousPage: "上一页",
+        nextPage: "下一页",
+        pageNavigation: "页面导航",
         sourceNote:
             "每个示例遵循同一规则：实际发送的 body 必须与参与签名的 body 完全一致。",
     },
@@ -2309,14 +2318,14 @@ const pages = [
         },
     },
     {
-        id: "appendix",
+        id: "response-codes",
         exampleKey: "callback",
         i18n: {
             vi: {
-                nav: "Tham chiếu",
-                kicker: "Thông tin tham chiếu",
-                title: "Bảng giá trị, callback và trạng thái",
-                lead: "Các bảng dưới đây tóm tắt những giá trị cố định và trường dữ liệu thường dùng trong flow QR thanh toán dynamic của LIT Merchant.",
+                nav: "Mã phản hồi",
+                kicker: "Response codes",
+                title: "Mã phản hồi, trạng thái và callback",
+                lead: "Các bảng dưới đây tóm tắt những mã phản hồi, trạng thái giao dịch, giá trị cố định và callback thường dùng trong flow QR thanh toán dynamic của LIT Merchant.",
                 sections: [
                     {
                         type: "table",
@@ -2354,10 +2363,10 @@ const pages = [
                 ],
             },
             en: {
-                nav: "Appendix",
-                kicker: "Reference",
-                title: "Values, callback, and status reference",
-                lead: "The tables below summarize fixed values and common fields used in the LIT Merchant dynamic payment QR flow.",
+                nav: "Response codes",
+                kicker: "Response codes",
+                title: "Response codes, statuses, and callback",
+                lead: "The tables below summarize response codes, transaction statuses, fixed values, and callback handling used in the LIT Merchant dynamic payment QR flow.",
                 sections: [
                     {
                         type: "table",
@@ -2390,10 +2399,10 @@ const pages = [
                 ],
             },
             zh: {
-                nav: "附录",
-                kicker: "参考",
-                title: "取值、回调和状态说明",
-                lead: "以下表格汇总 LIT Merchant 动态支付二维码流程中的固定取值和常用字段。",
+                nav: "响应码",
+                kicker: "响应码",
+                title: "响应码、状态与回调说明",
+                lead: "以下表格汇总 LIT Merchant 动态支付二维码流程中的响应码、交易状态、固定取值和回调处理方式。",
                 sections: [
                     {
                         type: "table",
@@ -3228,6 +3237,9 @@ const state = {
 };
 
 const SCROLL_STORAGE_KEY = "lit-doc-page-scroll";
+const routeAliases = {
+    appendix: "response-codes",
+};
 const pageScrollPositions = (() => {
     try {
         return JSON.parse(sessionStorage.getItem(SCROLL_STORAGE_KEY)) || {};
@@ -3257,8 +3269,14 @@ function inline(value) {
         .replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>');
 }
 
+function normalizePageId(pageId) {
+    return routeAliases[pageId] || pageId;
+}
+
 function currentPage() {
-    const id = window.location.hash.replace("#", "") || "overview";
+    const id = normalizePageId(
+        window.location.hash.replace("#", "") || "overview",
+    );
     return pages.find((page) => page.id === id) || pages[0];
 }
 
@@ -3303,14 +3321,15 @@ function renderCurrentRoute() {
 }
 
 function navigateToPage(pageId) {
-    if (!pages.some((page) => page.id === pageId)) return;
-    if (pageId === activePageId) return;
+    const normalizedPageId = normalizePageId(pageId);
+    if (!pages.some((page) => page.id === normalizedPageId)) return;
+    if (normalizedPageId === activePageId) return;
 
     savePageScrollPosition(activePageId);
-    history.pushState(null, "", `#${pageId}`);
+    history.pushState(null, "", `#${normalizedPageId}`);
     renderPage();
     document.getElementById("docRoot").focus({ preventScroll: true });
-    activePageId = pageId;
+    activePageId = normalizedPageId;
     restorePageScrollPosition(activePageId);
 }
 
@@ -3502,6 +3521,41 @@ function renderExample(key) {
   `;
 }
 
+function renderPagerButton(page, label, direction) {
+    if (!page) {
+        return `
+      <span class="pager-button ${direction} disabled" aria-disabled="true">
+        <span>${escapeHtml(label)}</span>
+      </span>
+    `;
+    }
+
+    return `
+    <a class="pager-button ${direction}" href="#${page.id}" data-page-link="${page.id}">
+      <span>${escapeHtml(label)}</span>
+      <strong>${escapeHtml(page.i18n[state.lang].nav)}</strong>
+    </a>
+  `;
+}
+
+function renderPagePager(page) {
+    const index = pages.findIndex((item) => item.id === page.id);
+    const previousPage = index > 0 ? pages[index - 1] : null;
+    const nextPage =
+        index >= 0 && index < pages.length - 1 ? pages[index + 1] : null;
+
+    return `
+    <nav class="page-pager" aria-label="${escapeHtml(copy[state.lang].pageNavigation)}">
+      ${renderPagerButton(
+          previousPage,
+          copy[state.lang].previousPage,
+          "previous",
+      )}
+      ${renderPagerButton(nextPage, copy[state.lang].nextPage, "next")}
+    </nav>
+  `;
+}
+
 function renderPage() {
     const page = currentPage();
     const data = page.i18n[state.lang];
@@ -3529,7 +3583,7 @@ function renderPage() {
     <div class="section-grid">
       ${sections}
       ${page.hideExample ? "" : renderExample(page.exampleKey)}
-      ${page.hideExample ? "" : `<p class="footer-note">Base URL: <code>${BASE_URL}</code></p>`}
+      ${renderPagePager(page)}
     </div>
   `;
     renderNav();
@@ -3565,6 +3619,13 @@ document.addEventListener("click", (event) => {
             document.querySelector(".sidebar").classList.remove("open");
         }
         navigateToPage(pageId);
+        return;
+    }
+
+    const pageLink = event.target.closest("[data-page-link]");
+    if (pageLink) {
+        event.preventDefault();
+        navigateToPage(pageLink.dataset.pageLink);
     }
 });
 

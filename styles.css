@@ -927,14 +927,59 @@ pre {
     word-break: break-word;
 }
 
-.footer-note {
-    padding: 56px 0 0;
-    color: var(--muted);
-    font-size: 15px;
+.page-pager {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    padding-top: 48px;
+    border-top: 1px solid rgba(6, 9, 138, 0.12);
 }
 
-.footer-note code {
+.pager-button {
+    min-height: 96px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 7px;
+    padding: 22px 26px;
+    border-radius: 28px;
+    background: #ffffff;
+    color: var(--black);
+    text-decoration: none;
+    box-shadow: inset 0 0 0 1px rgba(6, 9, 138, 0.1);
+    transition:
+        box-shadow 250ms var(--ease),
+        transform 300ms var(--ease),
+        background 250ms var(--ease);
+}
+
+.pager-button.next {
+    align-items: flex-end;
+    text-align: right;
+}
+
+.pager-button span {
     color: var(--blue);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.pager-button strong {
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.pager-button:not(.disabled):hover {
+    background: var(--blue-soft);
+    box-shadow: inset 0 0 0 1px rgba(6, 9, 138, 0.22);
+    transform: translateY(-2px);
+}
+
+.pager-button.disabled {
+    opacity: 0.36;
+    pointer-events: none;
 }
 
 @media (max-width: 1100px) {
@@ -999,8 +1044,14 @@ pre {
 
     .flow-list,
     .two-column,
-    .source-list {
+    .source-list,
+    .page-pager {
         grid-template-columns: 1fr;
+    }
+
+    .pager-button.next {
+        align-items: flex-start;
+        text-align: left;
     }
 }
 
